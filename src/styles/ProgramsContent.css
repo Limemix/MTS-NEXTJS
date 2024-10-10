@@ -1,0 +1,39 @@
+.program {
+    flex-direction: row;
+}
+
+.program-image {
+    flex: 1;
+    display: flex; 
+    justify-content: center;
+    align-items: center; 
+}
+
+.program-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+}
+
+.program-body {
+    flex: 1;
+    padding: 2rem;
+    hyphens: auto;
+}
+
+.program-body > h4 {
+    font-size: 2em;
+    overflow-wrap: break-all;
+}
+.program-body > p {
+    font-size: 1.2em;
+}
+
+@media screen and (max-width: 1155px) {
+    .program {
+        flex-direction: column;
+    }
+    .program-image img {
+        max-width: 50%;
+    }
+}

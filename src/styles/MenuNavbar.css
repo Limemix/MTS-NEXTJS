@@ -1,0 +1,153 @@
+nav.navbar {
+    background-color: #F8F9FA;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: height 0.3s;
+}
+
+.nav-header {
+    display: flex;
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.navbar-logo img {
+    height: 40px;
+    width: 40px;
+    margin: 0 1rem;
+}
+
+.navbar-toggle {
+    display: none;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: black;
+    font-weight: bolder;
+}
+
+.navbar-toggle:hover {
+    background: rgba(42, 19, 1, 0.5);
+}
+
+.navbar-menu {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    padding: 0;
+    flex: 1;
+}
+
+.navbar-menu li {
+    margin-left: 20px;
+}
+
+.navbar-menu a {
+    text-decoration: none;
+    font-size: 2em;
+    font-weight: bold;
+    color: black;
+    margin: 1rem;
+}
+
+.navbar-menu a:hover {
+    color: rgb(102, 90, 91);
+}
+
+.navbar-extra {
+    width: 100%;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+.navbar-extra.open {
+    max-height: 500px; 
+    opacity: 1;
+}
+
+.extra-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.images-row {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.images-row img {
+    height: 64px;
+    width: 64px;
+    margin: 10px;
+}
+
+.text-center {
+    text-align: center;
+    margin-top: 20px;
+    width: 100%;
+}
+
+@media (max-width: 1000px) {
+    .navbar-container {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .nav-header {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+    }
+
+    .navbar-toggle {
+        display: block;
+        align-self: center;
+        margin-left: auto;
+    }
+
+    .navbar-menu {
+        flex-direction: column;
+        width: 100%;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+    }
+
+    .navbar-menu.open {
+        max-height: 300px;
+    }
+
+    .navbar-menu li {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .navbar-menu a {
+        padding: 1rem;
+        width: 100%;
+        text-align: left;
+    }
+}
+
+@media (min-width: 1000px) {
+    .navbar-extra {
+        display: none;
+    }
+}

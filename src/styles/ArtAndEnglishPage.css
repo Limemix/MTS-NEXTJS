@@ -1,0 +1,90 @@
+main {
+    display: flex;
+    flex-direction: column;
+    margin: 100px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.menu-nav {
+    height: 75px;
+    width: 100%;
+    background-color: #F8F9FA;
+    display: flex;
+    align-items: center;
+}
+
+.back-link {
+    text-decoration: none;
+    font-size: 1.2em;
+    color: #000;
+    margin-left: 25px;
+}
+
+.gif {
+    max-height: 600px;
+    max-width: 600px;
+    width: 80%;
+    border-radius: 15%;
+}
+
+.header-art-and-english {
+    font-size: 3em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.description {
+    font-size: 24px;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.features {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-bottom: 40px;
+    padding: 40px;
+}
+
+.feature {
+    flex: 1;
+    padding: 75px 75px;
+    margin: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.feature h3 {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.feature p {
+    font-size: 20px;
+}
+
+.footer {
+    display: flex;
+    flex-direction: row;
+    font-size: 24px;
+    color: #777;
+    margin-top: 20px;
+
+    @media (max-width: 1400px) {
+        flex-direction: column;
+    }
+}
+#map {
+    margin: 2rem;
+}
+
+.footer-info {
+    flex: 1;
+    color: rgb(85, 85, 85);
+}

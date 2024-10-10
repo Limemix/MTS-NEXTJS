@@ -1,0 +1,128 @@
+#about {
+    display: flex;
+    flex-direction: row;
+    padding: 15px;
+    background-color: rgba(246, 242, 240, 0.85);
+    overflow-x: hidden; 
+    box-sizing: border-box; 
+}
+
+.about-info {
+    flex: 2.5;
+    margin-right: 2rem;
+    box-sizing: border-box; 
+}
+
+.about-gallery {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    box-sizing: border-box; 
+}
+
+.about-galery-image {
+    display: block;
+    width: 100%;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    border-radius: 5rem;
+    box-sizing: border-box; 
+}
+
+.about-galery-slide {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5rem;
+    box-sizing: border-box; 
+}
+
+.about-description {
+    padding: 1rem;
+    width: 100%;
+    padding-right: 4rem;
+    font-size: 1.25rem;
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+}
+
+.about-header {
+    font-size: 3rem;
+    border-bottom: 0.2rem solid #000;
+    border-color: #000;
+    border-width: 0.3rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    width: 75%;
+    box-sizing: border-box; 
+}
+
+.about-offers-header {
+    font-size: 2rem;
+    margin: 0 auto;
+    margin-bottom: 2rem;
+    width: fit-content;
+    text-align: center;
+    box-sizing: border-box; 
+}
+
+.about-lists {
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box; 
+}
+
+.about-list {
+    flex: 1;
+    text-align: center;
+    background: #fff;
+    border-radius: 1rem;
+    margin: 1rem;
+    padding: 1rem;
+    box-sizing: border-box; 
+}
+
+.about-list-header {
+    margin-bottom: 2rem;
+    border-bottom: 0.2rem solid #000;
+    font-size: 2em;
+    box-sizing: border-box;
+}
+
+.about-list-content {
+    text-align: left;
+    box-sizing: border-box; 
+}
+
+.about-list-content .container-row {
+    margin: 1.5rem;
+    font-size: 1.25rem;
+    box-sizing: border-box; 
+}
+
+.about-list-content .container-row p {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+    .about-description {
+        padding-right: 3rem;
+    }
+}
+
+@media screen and (max-width: 1500px) {
+    #about {
+        flex-direction: column;
+        padding: 0 15px;
+    }
+    .about-info {
+        margin-right: 0;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .about-lists {
+        flex-direction: column;
+    }
+}

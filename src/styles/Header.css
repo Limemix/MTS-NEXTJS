@@ -1,0 +1,169 @@
+.header {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.header-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.header-background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.header-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+.header-light-zone {
+    background: rgba(255, 255, 255, 0.5); 
+    border-bottom-right-radius: 50%;
+    flex: 4;
+}
+
+.social-section {
+    flex: 2;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    padding-top: 1rem;
+    margin-top: 1rem;
+}
+
+.social-icon {
+    border: 5px solid black;
+    border-radius: 40%;
+    padding: 3px;
+    margin-right: 20px;
+    display: inline-block;
+    color: black;
+}
+
+.social-icon svg {
+    width: 60px;
+    height: 60px;
+}
+
+.social-icon img {
+    width: 60px;
+    height: 60px;
+}
+
+.contact-info {
+    text-align: center;
+    padding: 1rem;
+    font-size: 1.25rem;
+    margin-top: 1rem;
+}
+
+.header-logo img {
+    margin-left: 3.4%;
+    width: 30%;
+    height: auto;
+}
+
+.header-title {
+    margin-left: 5%;
+    border-top: 3px solid black;
+    margin-right: 25%;
+    color: #2a1301;
+}
+
+.header-title h1 {
+    font-size: 4em;
+}
+
+.quote-section {
+    padding: 1rem;
+    margin-right: 25%;
+    font-size: 1.25rem;
+    background: rgba(255,255,255,0.5);
+}
+
+.quote {
+    margin-bottom: 0.5rem;
+    text-align: end;
+}
+
+.quote-author {
+    font-size: 1rem;
+    text-align: end;
+}
+
+.join-button {
+    background-color: #2a1301;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: double 7px white;
+    border-radius: 25px;
+    display: block;
+    width: 60%;
+    max-width: 340px;
+    margin: 3rem;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.button-join-us-container {
+    display: flex;
+    
+}
+
+
+@media (max-width: 1000px) {
+    .social-section {
+        display: none;
+    }
+
+    .header-light-zone {
+        border-bottom-right-radius: 0;
+    }
+
+    .button-join-us-container {
+        justify-content: center;
+    }
+
+    .header-title {
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        margin: 1rem;
+    }
+
+    .header-title h1 {
+        font-size: 3em;
+    }
+    .header-logo {
+        display: flex;
+        justify-content: center;
+    }
+
+    .header-logo img {
+        width: 50%;
+        margin: 0;
+    }
+
+    .header-light-zone {
+        background: rgba(255, 255, 255, 0.7); 
+    }
+
+    .quote-section {
+        background: rgba(255,255,255,0.7);
+    }
+}

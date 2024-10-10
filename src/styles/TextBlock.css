@@ -1,0 +1,18 @@
+.text-block {
+    width: 30vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    font-family: sans-serif;
+}
+
+.text-block:hover {
+    background: #f7f7f7;
+}
+
+.text-block.expanded {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+}

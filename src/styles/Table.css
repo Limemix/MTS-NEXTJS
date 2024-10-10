@@ -1,0 +1,11 @@
+.table-button-events {
+    margin: 0.5rem;
+}
+
+.delete {
+    background-color: #b70b0b;
+}
+
+.delete:hover {
+    background-color: #740f0f;
+}

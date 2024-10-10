@@ -1,0 +1,121 @@
+#events {
+    background-color: #faf0eb;
+    padding: 2rem;
+}
+
+.events-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.title-container {
+    margin-bottom: 20px;
+}
+
+.events-title {
+    font-size: 3.5rem; 
+    border-bottom: 0.3rem solid #000;
+}
+
+.events-description {
+    font-size: 1.75rem; 
+}
+
+.events-list {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-direction: row;
+}
+
+.event-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    width: 33%;
+    transition: width 0.3s ease;
+}
+
+.event-card.expanded {
+    width: 100%; 
+}
+
+.event-image {
+    border-radius: 10px 10px 0 0;
+    height: auto;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    justify-content: center;
+    align-items: center;
+}
+
+.event-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.event-name {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.event-address, .event-full-address {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+.event-full-address {
+    margin-bottom: 20px;
+}
+
+.event-description {
+    font-size: 1.25rem; 
+    overflow-y: auto;
+    flex: 1;
+    text-align: start;
+    overflow: hidden;
+    flex-grow: 1;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+}
+
+.event-button {
+    background-color: #2a1301;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 15px 30px;
+    font-size: 1.25rem; 
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    align-self: flex-end;
+    text-decoration: none;
+}
+
+.event-button:hover {
+    background-color: #1a0801;
+}
+
+@media screen and (max-width: 1000px) {
+    .events-list {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .event-card {
+        width: 80%;
+    }
+
+    .event-card.expanded {
+        width: 80%;
+        height: auto; 
+    }
+}

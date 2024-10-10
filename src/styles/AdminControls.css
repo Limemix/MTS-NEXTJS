@@ -1,0 +1,45 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    font-family: sans-serif;
+}
+
+header {
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    background: #0763c5;
+    padding: 15px;
+    color: rgb(255 255, 255);
+    align-items: center;
+    justify-content: center;
+}
+
+.logout-button {
+    margin-left: auto;
+    width: 100px;
+    height: 50%;
+    font-size: large;
+    text-align: center; 
+    line-height: 100%; 
+}
+
+.logout-button:hover {
+    cursor: pointer;
+}
+
+.content {
+    flex: 1;
+    padding: 15px;
+}
+
+.forms {
+    display: flex;
+    flex-direction: row;
+}
+
+.control {
+    background-color: #f7f7f7;
+    padding-bottom: 25px;
+}

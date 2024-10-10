@@ -1,0 +1,9 @@
+.footer-credits {
+    background-color: #f3e3de;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
