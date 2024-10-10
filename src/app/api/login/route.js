@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
-const SECRET_KEY = 'nzrbSp0DdXmeGmrDHbFPVPnJdM0ILX';
+const SECRET_KEY = process.env.NEXT_PUBLIC_SECRET_KEY;
 const USERNAME = 'admin';
 const PASSWORD_HASH = '$2a$12$FSKZsxF.3lL.nJjBevCJPu7lWQg4p.WC8JdiWBPsCouwDacxrWsq.';
 

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 
-const SECRET_KEY = 'nzrbSp0DdXmeGmrDHbFPVPnJdM0ILX';
+const SECRET_KEY = process.env.NEXT_PUBLIC_SECRET_KEY;
 
 export async function POST(request) {
   const { token } = await request.json();
