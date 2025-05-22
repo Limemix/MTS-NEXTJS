@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import axios from 'axios';
-import '@/styles/FeedbackForm.css';
+//import '@/styles/FeedbackForm.css';
 
 function FeedbackForm() {
     const [name, setName] = useState('');
