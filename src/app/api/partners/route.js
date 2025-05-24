@@ -1,13 +1,15 @@
 import fs from 'fs/promises';
+import path from 'path';
 import { NextResponse } from 'next/server';
-import connectDB from '@/db/db';
-import Partner from '@/db/models/Partner';
 import { authenticate } from '@/app/api/check-auth/authenticate';
+
+const dataFilePath = path.join(process.cwd(), 'src', 'db', 'partners.json');
+const imageDir = path.join(process.cwd(), 'public', 'images');
 
 export async function GET(req) {
     try {
-        await connectDB();
-        const partners = await Partner.find({});
+        const fileData = await fs.readFile(dataFilePath, 'utf-8');
+        const partners = JSON.parse(fileData);
         return NextResponse.json(partners, { status: 200 });
     } catch (e) {
         console.error(e);
@@ -31,17 +33,26 @@ export async function POST(req) {
         const { url } = data;
         const image = formData.get("image");
         let imagePath = '';
+
         if (image !== 'null' && image !== null) {
             const arrayBuffer = await image.arrayBuffer();
             const buffer = new Uint8Array(arrayBuffer);
             const imageName = "image-" + Date.now() + "." + image.name.split('.').pop();
-            await fs.writeFile(`./public/images/${imageName}`, buffer);
+            await fs.writeFile(path.join(imageDir, imageName), buffer);
             imagePath = imageName;
         }
 
-        await connectDB();
-        const newPartner = new Partner({ url, imagePath });
-        await newPartner.save();
+        const fileData = await fs.readFile(dataFilePath, 'utf-8');
+        const partners = JSON.parse(fileData);
+
+        const newPartner = {
+            id: Date.now(),
+            url,
+            imagePath
+        };
+
+        partners.push(newPartner);
+        await fs.writeFile(dataFilePath, JSON.stringify(partners, null, 2), 'utf-8');
 
         return NextResponse.json(newPartner, { status: 201 });
     } catch (e) {

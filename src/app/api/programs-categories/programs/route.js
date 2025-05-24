@@ -11,7 +11,6 @@ export async function POST(req) {
     }
 
     try {
-        await connectDB();
         const formData = await req.formData();
         const data = {};
         formData.forEach((value, key) => {
@@ -27,7 +26,7 @@ export async function POST(req) {
 
         let imagePath = '';
         const image = formData.get("image");
-        if (image !== 'null' && image !== null) {
+        if (image && image.size > 0) {
             const arrayBuffer = await image.arrayBuffer();
             const buffer = new Uint8Array(arrayBuffer);
             const imageName = "image-" + Date.now() + "." + image.name.split('.').pop();

@@ -2,8 +2,9 @@ import fs from 'fs/promises';
 import path from 'path';
 import { NextResponse } from 'next/server';
 import { authenticate } from '@/app/api/check-auth/authenticate';
-import connectDB from '@/db/db'; 
-import Partner from '@/db/models/Partner';
+
+const dataFilePath = path.join(process.cwd(), 'src', 'db', 'partners.json');
+const imageDir = path.join(process.cwd(), 'public', 'images');
 
 export async function PUT(req, { params }) {
     const authError = authenticate(req);
@@ -21,17 +22,17 @@ export async function PUT(req, { params }) {
     const { url } = data;
 
     try {
-        await connectDB();
-        const partner = await Partner.findById(_id);
+        const fileData = await fs.readFile(dataFilePath, 'utf-8');
+        const partners = JSON.parse(fileData);
 
-        if (!partner) {
+        const index = partners.findIndex(p => p.id.toString() === _id);
+        if (index === -1) {
             return NextResponse.json({ message: 'Partner not found!' }, { status: 404 });
         }
 
         if (formData.get("image") !== 'null' && formData.get("image") !== null) {
-            // Delete old image
-            const oldImagePath = partner.imagePath;
-            const oldFilePath = path.resolve(process.cwd(), 'public', 'images', oldImagePath);
+            const oldImagePath = partners[index].imagePath;
+            const oldFilePath = path.join(imageDir, oldImagePath);
             try {
                 await fs.unlink(oldFilePath);
             } catch (error) {
@@ -42,15 +43,14 @@ export async function PUT(req, { params }) {
             const arrayBuffer = await image.arrayBuffer();
             const buffer = new Uint8Array(arrayBuffer);
             const imageName = "image-" + Date.now() + "." + image.name.split('.').pop();
-            await fs.writeFile(`./public/images/${imageName}`, buffer);
-
-            partner.imagePath = imageName;
+            await fs.writeFile(path.join(imageDir, imageName), buffer);
+            partners[index].imagePath = imageName;
         }
 
-        partner.url = url;
-        await partner.save();
+        partners[index].url = url;
 
-        return NextResponse.json(partner, { status: 200 });
+        await fs.writeFile(dataFilePath, JSON.stringify(partners, null, 2), 'utf-8');
+        return NextResponse.json(partners[index], { status: 200 });
     } catch (e) {
         console.error(e);
         return NextResponse.json({ message: 'Error updating partner!' }, { status: 400 });
@@ -61,8 +61,9 @@ export async function GET(req, { params }) {
     const { _id } = params;
 
     try {
-        await connectDB();
-        const partner = await Partner.findById(_id);
+        const fileData = await fs.readFile(dataFilePath, 'utf-8');
+        const partners = JSON.parse(fileData);
+        const partner = partners.find(p => p.id.toString() === _id);
 
         if (!partner) {
             return NextResponse.json({ message: 'Partner not found!' }, { status: 404 });
@@ -84,22 +85,24 @@ export async function DELETE(req, { params }) {
     const { _id } = params;
 
     try {
-        await connectDB();
-        const partner = await Partner.findById(_id);
+        const fileData = await fs.readFile(dataFilePath, 'utf-8');
+        let partners = JSON.parse(fileData);
+        const index = partners.findIndex(p => p.id.toString() === _id);
 
-        if (!partner) {
+        if (index === -1) {
             return NextResponse.json({ message: 'Partner not found!' }, { status: 404 });
         }
 
-        // Delete the image associated with the partner
-        const filePath = path.resolve(process.cwd(), 'public', 'images', partner.imagePath);
+        const partner = partners[index];
+        const filePath = path.join(imageDir, partner.imagePath);
         try {
             await fs.unlink(filePath);
         } catch (error) {
             console.error('Error deleting file:', error);
         }
 
-        await partner.deleteOne();
+        partners.splice(index, 1);
+        await fs.writeFile(dataFilePath, JSON.stringify(partners, null, 2), 'utf-8');
 
         return NextResponse.json({ message: 'Partner deleted successfully!' }, { status: 200 });
     } catch (e) {

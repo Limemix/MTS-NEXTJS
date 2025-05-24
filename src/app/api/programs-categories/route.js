@@ -1,14 +1,15 @@
 import { NextResponse } from 'next/server';
 import { authenticate } from '@/app/api/check-auth/authenticate';
 import fs from 'fs/promises';
-import connectDB from '@/db/db';
-import ProgramCategory from '@/db/models/ProgramCategory';
+import path from 'path';
 
-// GET method: Fetch all categories
+const dataFilePath = path.join(process.cwd(), 'src', 'db', 'programs.json');
+const imageDir = path.join(process.cwd(), 'public', 'images');
+
 export async function GET(req) {
-    await connectDB();
     try {
-        const categories = await ProgramCategory.find({});
+        const fileData = await fs.readFile(dataFilePath, 'utf-8');
+        const categories = JSON.parse(fileData);
         return NextResponse.json(categories, { status: 200 });
     } catch (e) {
         console.error(e);
@@ -16,37 +17,40 @@ export async function GET(req) {
     }
 }
 
-// POST method: Create a new category
 export async function POST(req) {
     const authError = authenticate(req);
     if (authError) {
         return NextResponse.json({ message: authError.error }, { status: authError.status });
     }
 
-    await connectDB();
     try {
         const formData = await req.formData();
         const { categoryName, description } = Object.fromEntries(formData);
 
-        // Handle image upload
         const image = formData.get("image");
         let imagePath = '';
         if (image !== 'null' && image !== null) {
             const arrayBuffer = await image.arrayBuffer();
             const buffer = new Uint8Array(arrayBuffer);
             const imageName = `image-${Date.now()}.${image.name.split('.').pop()}`;
-            await fs.writeFile(`./public/images/${imageName}`, buffer);
+            await fs.writeFile(path.join(imageDir, imageName), buffer);
             imagePath = imageName;
         }
 
-        const newCategory = new ProgramCategory({
+        const fileData = await fs.readFile(dataFilePath, 'utf-8');
+        const categories = JSON.parse(fileData);
+
+        const newCategory = {
+            id: Date.now(),
             categoryName,
             description,
             imagePath,
             programs: []
-        });
+        };
 
-        await newCategory.save();
+        categories.push(newCategory);
+        await fs.writeFile(dataFilePath, JSON.stringify(categories, null, 2), 'utf-8');
+
         return NextResponse.json(newCategory, { status: 201 });
     } catch (e) {
         console.error(e);

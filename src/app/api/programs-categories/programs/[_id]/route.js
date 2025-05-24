@@ -13,10 +13,7 @@ export async function PUT(req, { params }) {
 
     const { _id } = params;
     const formData = await req.formData();
-    const data = {};
-    formData.forEach((value, key) => {
-        data[key] = value;
-    });
+    const data = Object.fromEntries(formData);
 
     let { categoryId, newCategoryId, name, description, type, numberOfLessons, lessonDuration, courseDuration, coursePrice } = data;
 
@@ -34,7 +31,8 @@ export async function PUT(req, { params }) {
         }
 
         let imagePath = oldCategory.programs[programIndex].imagePath;
-        if (formData.get("image") !== 'null') {
+        const uploadedImage = formData.get("image");
+        if (uploadedImage && uploadedImage.size > 0) {
             // Delete old image
             const oldImagePath = path.resolve(process.cwd(), 'public', 'images', imagePath);
             try {
@@ -43,23 +41,27 @@ export async function PUT(req, { params }) {
                 console.error('Error deleting file:', error);
             }
 
-            const image = formData.get("image");
-            const arrayBuffer = await image.arrayBuffer();
+            const arrayBuffer = await uploadedImage.arrayBuffer();
             const buffer = new Uint8Array(arrayBuffer);
-            const imageName = "image-" + Date.now() + "." + image.name.split('.').pop();
-            await fs.writeFile(`./public/images/${imageName}`, buffer);
-            imagePath = imageName;
+            const imageName = `image-${Date.now()}.${uploadedImage.name.split('.').pop()}`;
+            try {
+                await fs.writeFile(`./public/images/${imageName}`, buffer);
+                imagePath = imageName;
+            } catch (err) {
+                console.error('Failed to save image:', err);
+                return NextResponse.json({ message: 'Failed to save image file' }, { status: 500 });
+            }
         }
 
         const updatedProgram = {
-            ...oldCategory.programs[programIndex]._doc, // Preserve other fields
+            ...oldCategory.programs[programIndex]._doc,
             name,
             description,
             type,
-            numberOfLessons,
-            lessonDuration,
-            courseDuration,
-            coursePrice,
+            numberOfLessons: Number(numberOfLessons),
+            lessonDuration: Number(lessonDuration),
+            courseDuration: Number(courseDuration),
+            coursePrice: Number(coursePrice),
             imagePath
         };
 
@@ -94,12 +96,7 @@ export async function DELETE(req, { params }) {
 
     const { _id } = params;
     const formData = await req.formData();
-    const data = {};
-    formData.forEach((value, key) => {
-        data[key] = value;
-    });
-
-    const { categoryId } = data;
+    const { categoryId } = Object.fromEntries(formData);
 
     try {
         await connectDB();

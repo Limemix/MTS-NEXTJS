@@ -1,13 +1,15 @@
-import News from '@/db/models/News';
 import { NextResponse } from 'next/server';
-import connectDB from '@/db/db';
-const fs = require('fs').promises;
 import { authenticate } from '@/app/api/check-auth/authenticate';
+const fs = require('fs').promises;
+const path = require('path');
+
+const filePath = path.join(process.cwd(), 'src', 'db', 'news.json');
 
 export async function GET(req) {
     try {
-        await connectDB()
-        const allNews = await News.find();
+        const fileData = await fs.readFile(filePath, 'utf-8');
+        const allNews = JSON.parse(fileData);
+
         if (!allNews || allNews.length === 0) {
             return NextResponse.json({ message: 'No news found' }, { status: 404 });
         }
@@ -20,15 +22,12 @@ export async function GET(req) {
 }
 
 export async function POST(req) {
-    // Перевірка авторизації
     const authError = authenticate(req);
     if (authError) {
         return NextResponse.json({ message: authError.error }, { status: authError.status });
     }
 
     try {
-        await connectDB()
-        // Отримуємо FormData
         const formData = await req.formData();
         const data = {};
 
@@ -38,32 +37,33 @@ export async function POST(req) {
 
         const { name, shortAddress, fullAddress, description } = data;
 
-        // Перевіряємо, чи було передано зображення
         const image = formData.get("image");
         if (image && image.size > 0) {
             const arrayBuffer = await image.arrayBuffer();
             const buffer = new Uint8Array(arrayBuffer);
             const imageName = "image-" + Date.now() + "." + image.name.split('.').pop();
             await fs.writeFile(`./public/images/${imageName}`, buffer);
-
             data.imagePath = imageName;
         } else {
-            data.imagePath = null; // Якщо зображення немає, встановлюємо imagePath як null
+            data.imagePath = null;
         }
 
-        // Створення нової новини
-        const newNews = new News({
-            name: name,
-            shortAddress: shortAddress,
-            fullAddress: fullAddress,
-            description: description,
+        const fileData = await fs.readFile(filePath, 'utf-8');
+        const newsArray = JSON.parse(fileData);
+
+        const newNews = {
+            id: Date.now(),
+            name,
+            shortAddress,
+            fullAddress,
+            description,
             imagePath: data.imagePath,
-        });
+        };
 
-        // Збереження новини в базі даних
-        const savedNews = await newNews.save();
+        newsArray.push(newNews);
+        await fs.writeFile(filePath, JSON.stringify(newsArray, null, 2), 'utf-8');
 
-        return NextResponse.json(savedNews, { status: 201 });
+        return NextResponse.json(newNews, { status: 201 });
     } catch (error) {
         console.error('Error creating news:', error);
         return NextResponse.json({ message: 'Error creating news' }, { status: 400 });

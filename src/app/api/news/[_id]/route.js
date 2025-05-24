@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
-import News from '@/db/models/News';
-import connectDB from '@/db/db';
+import { authenticate } from '@/app/api/check-auth/authenticate';
 import fs from 'fs/promises';
 import path from 'path';
-import { authenticate } from '@/app/api/check-auth/authenticate';
+
+const dataFilePath = path.join(process.cwd(), 'src', 'db', 'news.json');
+const imageDir = path.join(process.cwd(), 'public', 'images');
 
 export async function PUT(req, { params }) {
     const authError = authenticate(req);
@@ -21,18 +22,20 @@ export async function PUT(req, { params }) {
     const { name, shortAddress, fullAddress, description } = data;
 
     try {
-        await connectDB(); 
+        const fileData = await fs.readFile(dataFilePath, 'utf-8');
+        const newsArray = JSON.parse(fileData);
+        const newsIndex = newsArray.findIndex(n => n.id.toString() === _id);
 
-        const newsItem = await News.findById(_id);
-        if (!newsItem) {
+        if (newsIndex === -1) {
             return NextResponse.json({ message: 'News not found' }, { status: 404 });
         }
 
+        const newsItem = newsArray[newsIndex];
+
         const image = formData.get("image");
         if (image && image.size > 0) {
-            const oldImagePath = newsItem.imagePath;
-            if (oldImagePath) {
-                const oldFilePath = path.resolve(process.cwd(), 'public', 'images', oldImagePath);
+            if (newsItem.imagePath) {
+                const oldFilePath = path.join(imageDir, newsItem.imagePath);
                 try {
                     await fs.unlink(oldFilePath);
                 } catch (error) {
@@ -43,8 +46,7 @@ export async function PUT(req, { params }) {
             const arrayBuffer = await image.arrayBuffer();
             const buffer = new Uint8Array(arrayBuffer);
             const imageName = "image-" + Date.now() + "." + image.name.split('.').pop();
-            await fs.writeFile(`./public/images/${imageName}`, buffer);
-
+            await fs.writeFile(path.join(imageDir, imageName), buffer);
             newsItem.imagePath = imageName;
         }
 
@@ -53,23 +55,24 @@ export async function PUT(req, { params }) {
         newsItem.fullAddress = fullAddress || newsItem.fullAddress;
         newsItem.description = description || newsItem.description;
 
-        const updatedNews = await newsItem.save();
+        newsArray[newsIndex] = newsItem;
+        await fs.writeFile(dataFilePath, JSON.stringify(newsArray, null, 2), 'utf-8');
 
-        return NextResponse.json(updatedNews, { status: 200 });
+        return NextResponse.json(newsItem, { status: 200 });
     } catch (error) {
         console.error('Error updating news:', error);
         return NextResponse.json({ message: 'Error updating news' }, { status: 400 });
     }
 }
 
-
 export async function GET(req, { params }) {
     const { _id } = params;
 
     try {
-        await connectDB(); 
+        const fileData = await fs.readFile(dataFilePath, 'utf-8');
+        const newsArray = JSON.parse(fileData);
+        const newsItem = newsArray.find(n => n.id.toString() === _id);
 
-        const newsItem = await News.findById(_id);
         if (!newsItem) {
             return NextResponse.json({ message: 'News not found' }, { status: 404 });
         }
@@ -81,7 +84,6 @@ export async function GET(req, { params }) {
     }
 }
 
-
 export async function DELETE(req, { params }) {
     const { _id } = params;
     const authError = authenticate(req);
@@ -90,23 +92,26 @@ export async function DELETE(req, { params }) {
     }
 
     try {
-        await connectDB(); 
+        const fileData = await fs.readFile(dataFilePath, 'utf-8');
+        const newsArray = JSON.parse(fileData);
+        const newsIndex = newsArray.findIndex(n => n.id.toString() === _id);
 
-        const newsItem = await News.findById(_id);
-        if (!newsItem) {
+        if (newsIndex === -1) {
             return NextResponse.json({ message: 'News not found' }, { status: 404 });
         }
 
+        const [deletedItem] = newsArray.splice(newsIndex, 1);
 
-        const filePath = path.resolve(process.cwd(), 'public', 'images', newsItem.imagePath);
-        try {
-            await fs.unlink(filePath);
-        } catch (error) {
-            console.error('Error deleting file:', error);
+        if (deletedItem.imagePath) {
+            const imagePathToDelete = path.join(imageDir, deletedItem.imagePath);
+            try {
+                await fs.unlink(imagePathToDelete);
+            } catch (error) {
+                console.error('Error deleting file:', error);
+            }
         }
 
-
-        await newsItem.deleteOne();
+        await fs.writeFile(dataFilePath, JSON.stringify(newsArray, null, 2), 'utf-8');
 
         return NextResponse.json({ message: 'News deleted successfully' }, { status: 200 });
     } catch (error) {

@@ -293,7 +293,8 @@ const ProgramCategoryForm = (props) => {
             }
         } else {
             try {
-                const response = await axios.put(`/api/programs-categories/${props.category._id}`, formDataRes, {
+                console.log(props)
+                const response = await axios.put(`/api/programs-categories/${props.category.id}`, formDataRes, {
                     headers: {
                         "Authorization": "Bearer " + Cookies.get('token'),
                         "Content-Type": "multipart/form-data",
